@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生誕企画 カラーチェック</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+select, button {
+  font-size: 16px;
+  padding: 8px;
+  margin: 5px;
+}
+
+#result {
+  margin-top: 20px;
+  padding: 30px;
+  font-size: 24px;
+  font-weight: bold;
+  border-radius: 10px;
+  color: white;
+}
+</style>
+</head>
+
+<body>
+
+<h2>あなたのサイリウムの色</h2>
+
+<select id="row">
+  <option value="">列を選択</option>
+  <option>A</option><option>B</option><option>C</option><option>D</option>
+  <option>E</option><option>F</option><option>G</option><option>H</option>
+  <option>I</option><option>J</option>
+</select>
+
+<select id="num">
+  <option value="">番号</option>
+</select>
+
+<br>
+
+<button onclick="check()">確認</button>
+
+<div id="result"></div>
+
+<script>
+// 番号1〜23を自動生成
+const numSelect = document.getElementById("num");
+for(let i=1;i<=23;i++){
+  let opt = document.createElement("option");
+  opt.value = i;
+  opt.text = i;
+  numSelect.appendChild(opt);
+}
+
+// 座席データ
+const data = {};
+
+// ===== データ入力（ここがハート） =====
+function setRow(row, arr){
+  for(let i=0;i<23;i++){
+    data[row+"-"+(i+1)] = arr[i];
+  }
+}
+
+setRow("A", ["赤","赤","白","白","白","白","白","白","白","白","赤","赤","赤","白","白","白","白","白","白","白","白","赤","赤"]);
+setRow("B", ["赤","赤","白","白","白","白","白","白","白","赤","赤","赤","赤","赤","白","白","白","白","白","白","白","赤","赤"]);
+setRow("C", ["赤","赤","白","白","白","白","白","白","赤","赤","赤","赤","赤","赤","赤","白","白","白","白","白","白","赤","赤"]);
+setRow("D", ["赤","赤","白","白","白","白","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","白","白","白","白","赤","赤"]);
+setRow("E", ["赤","赤","白","白","白","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","白","白","白","赤","赤"]);
+setRow("F", ["赤","赤","白","白","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","白","白","赤","赤"]);
+setRow("G", ["赤","赤","白","白","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","白","白","赤","赤"]);
+setRow("H", ["赤","赤","白","白","白","赤","赤","赤","赤","赤","赤","白","赤","赤","赤","赤","赤","赤","白","白","白","赤","赤"]);
+setRow("I", ["赤","赤","白","白","白","白","赤","赤","赤","赤","白","白","白","赤","赤","赤","赤","白","白","白","白","赤","赤"]);
+setRow("J", ["赤","赤","白","白","白","白","白","赤","赤","白","白","白","白","白","赤","赤","白","白","白","白","白","赤","赤"]);
+
+// ===== 判定 =====
+function check(){
+  const row = document.getElementById("row").value;
+  const num = document.getElementById("num").value;
+  const key = row + "-" + num;
+  const color = data[key];
+
+  const result = document.getElementById("result");
+
+  if(!row || !num){
+    result.innerHTML = "列と番号を選択してください";
+    result.style.background = "gray";
+    return;
+  }
+
+  if(color){
+    result.innerHTML = "あなたの色は " + color;
+    result.style.background = (color === "赤") ? "red" : "white";
+    result.style.color = (color === "白") ? "black" : "white";
+  } else {
+    result.innerHTML = "対象外";
+    result.style.background = "gray";
+  }
+}
+</script>
+
+</body>
+</html>

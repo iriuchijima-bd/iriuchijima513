@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生誕企画 カラーチェック</title>
+
+<style>
+body{
+  font-family: sans-serif;
+  text-align:center;
+  padding:20px;
+  background:#fff0f5;
+  margin:0;
+}
+
+.container{
+  max-width:500px;
+  margin:auto;
+  background:white;
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1{
+  margin-bottom:10px;
+  color:#d6004c;
+}
+
+.desc{
+  margin-bottom:25px;
+  color:#666;
+  font-size:14px;
+}
+
+select,
+input,
+button{
+  width:100%;
+  box-sizing:border-box;
+  padding:12px;
+  margin:8px 0;
+  border-radius:10px;
+  border:1px solid #ccc;
+  font-size:16px;
+}
+
+button{
+  background:#d6004c;
+  color:white;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  opacity:0.9;
+}
+
+#result{
+  margin-top:25px;
+  padding:30px;
+  border-radius:15px;
+  font-size:24px;
+  font-weight:bold;
+  border:3px solid #ddd;
+  transition:0.3s;
+}
+
+.seat{
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+.color{
+  font-size:42px;
+}
+
+.note{
+  margin-top:25px;
+  font-size:13px;
+  color:#777;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>♡ 生誕企画 ♡</h1>
+
+<div class="desc">
+座席番号を入力して<br>
+あなたのサイリウムカラーを確認してください
+</div>
+
+<!-- 選択式 -->
+<select id="row">
+  <option value="">列を選択</option>
+  <option>A</option>
+  <option>B</option>
+  <option>C</option>
+  <option>D</option>
+  <option>E</option>
+  <option>F</option>
+  <option>G</option>
+  <option>H</option>
+  <option>I</option>
+  <option>J</option>
+</select>
+
+<select id="num">
+  <option value="">番号を選択</option>
+</select>
+
+<button onclick="check()">色を確認</button>
+
+<hr style="margin:30px 0;">
+
+<!-- 直接入力 -->
+<input type="text" id="seatInput" placeholder="例：A-12">
+
+<button onclick="directCheck()">直接検索</button>
+
+<div id="result"></div>
+
+<div class="note">
+ご協力よろしくお願いします！
+</div>
+
+</div>
+
+<script>
+
+// 番号1〜23
+const numSelect = document.getElementById("num");
+
+for(let i=1;i<=23;i++){
+  let opt = document.createElement("option");
+  opt.value = i;
+  opt.text = i;
+  numSelect.appendChild(opt);
+}
+
+// データ
+const data = {};
+
+function setRow(row, arr){
+  for(let i=0;i<23;i++){
+    data[row + "-" + (i+1)] = arr[i];
+  }
+}
+
+// ===== ハート配置 =====
+
+setRow("A", ["赤","赤","白","白","白","白","白","白","白","白","赤","赤","赤","白","白","白","白","白","白","白","白","赤","赤"]);
+
+setRow("B", ["赤","赤","白","白","白","白","白","白","白","赤","赤","赤","赤","赤","白","白","白","白","白","白","白","赤","赤"]);
+
+setRow("C", ["赤","赤","白","白","白","白","白","白","赤","赤","赤","赤","赤","赤","赤","白","白","白","白","白","白","赤","赤"]);
+
+setRow("D", ["赤","赤","白","白","白","白","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","白","白","白","白","赤","赤"]);
+
+setRow("E", ["赤","赤","白","白","白","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","白","白","白","赤","赤"]);
+
+setRow("F", ["赤","赤","白","白","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","白","白","赤","赤"]);
+
+setRow("G", ["赤","赤","白","白","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","赤","白","白","赤","赤"]);
+
+setRow("H", ["赤","赤","白","白","白","赤","赤","赤","赤","赤","赤","白","赤","赤","赤","赤","赤","赤","白","白","白","赤","赤"]);
+
+setRow("I", ["赤","赤","白","白","白","白","赤","赤","赤","赤","白","白","白","赤","赤","赤","赤","白","白","白","白","赤","赤"]);
+
+setRow("J", ["赤","赤","白","白","白","白","白","赤","赤","白","白","白","白","白","赤","赤","白","白","白","白","白","赤","赤"]);
+
+// ===== 表示関数 =====
+
+function showResult(seat, color){
+
+  const result = document.getElementById("result");
+
+  if(color){
+
+    result.innerHTML = `
+      <div class="seat">${seat}</div>
+      <div class="color">${color}</div>
+    `;
+
+    if(color === "赤"){
+      result.style.background = "red";
+      result.style.color = "white";
+    }else{
+      result.style.background = "white";
+      result.style.color = "black";
+    }
+
+  }else{
+
+    result.innerHTML = "座席が見つかりません";
+    result.style.background = "gray";
+    result.style.color = "white";
+
+  }
+}
+
+// ===== 選択式 =====
+
+function check(){
+
+  const row = document.getElementById("row").value;
+  const num = document.getElementById("num").value;
+
+  if(!row || !num){
+    alert("列と番号を選択してください");
+    return;
+  }
+
+  const seat = row + "-" + num;
+  const color = data[seat];
+
+  showResult(seat, color);
+
+}
+
+// ===== 直接検索 =====
+
+function directCheck(){
+
+  let input = document.getElementById("seatInput").value;
+
+  input = input.toUpperCase().replace(/\s/g,'');
+
+  const color = data[input];
+
+  showResult(input, color);
+
+}
+
+// ===== URL対応 =====
+// ?seat=A-12 で直接表示
+
+const params = new URLSearchParams(location.search);
+
+if(params.get("seat")){
+
+  const seat = params.get("seat").toUpperCase();
+
+  const color = data[seat];
+
+  showResult(seat, color);
+
+}
+
+</script>
+
+</body>
+</html>

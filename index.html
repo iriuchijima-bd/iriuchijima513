@@ -32,10 +32,10 @@ h1{
   margin-bottom:25px;
   color:#666;
   font-size:14px;
+  line-height:1.8;
 }
 
 select,
-input,
 button{
   width:100%;
   box-sizing:border-box;
@@ -92,11 +92,10 @@ button:hover{
 <h1>♡ 生誕企画 ♡</h1>
 
 <div class="desc">
-座席番号を入力して<br>
+座席番号を選択して<br>
 あなたのサイリウムカラーを確認してください
 </div>
 
-<!-- 選択式 -->
 <select id="row">
   <option value="">列を選択</option>
   <option>A</option>
@@ -116,13 +115,6 @@ button:hover{
 </select>
 
 <button onclick="check()">色を確認</button>
-
-<hr style="margin:30px 0;">
-
-<!-- 直接入力 -->
-<input type="text" id="seatInput" placeholder="例：A-12">
-
-<button onclick="directCheck()">直接検索</button>
 
 <div id="result"></div>
 
@@ -175,9 +167,24 @@ setRow("I", ["赤","赤","白","白","白","白","赤","赤","赤","赤","白","
 
 setRow("J", ["赤","赤","白","白","白","白","白","赤","赤","白","白","白","白","白","赤","赤","白","白","白","白","白","赤","赤"]);
 
-// ===== 表示関数 =====
+// ===== 判定 =====
 
-function showResult(seat, color){
+function check(){
+
+  const row = document.getElementById("row").value;
+  const num = document.getElementById("num").value;
+
+  if(!row || !num){
+
+    alert("列と番号を選択してください");
+
+    return;
+
+  }
+
+  const seat = row + "-" + num;
+
+  const color = data[seat];
 
   const result = document.getElementById("result");
 
@@ -189,52 +196,25 @@ function showResult(seat, color){
     `;
 
     if(color === "赤"){
+
       result.style.background = "red";
       result.style.color = "white";
+
     }else{
+
       result.style.background = "white";
       result.style.color = "black";
+
     }
 
   }else{
 
     result.innerHTML = "座席が見つかりません";
+
     result.style.background = "gray";
     result.style.color = "white";
 
   }
-}
-
-// ===== 選択式 =====
-
-function check(){
-
-  const row = document.getElementById("row").value;
-  const num = document.getElementById("num").value;
-
-  if(!row || !num){
-    alert("列と番号を選択してください");
-    return;
-  }
-
-  const seat = row + "-" + num;
-  const color = data[seat];
-
-  showResult(seat, color);
-
-}
-
-// ===== 直接検索 =====
-
-function directCheck(){
-
-  let input = document.getElementById("seatInput").value;
-
-  input = input.toUpperCase().replace(/\s/g,'');
-
-  const color = data[input];
-
-  showResult(input, color);
 
 }
 
@@ -249,7 +229,28 @@ if(params.get("seat")){
 
   const color = data[seat];
 
-  showResult(seat, color);
+  const result = document.getElementById("result");
+
+  if(color){
+
+    result.innerHTML = `
+      <div class="seat">${seat}</div>
+      <div class="color">${color}</div>
+    `;
+
+    if(color === "赤"){
+
+      result.style.background = "red";
+      result.style.color = "white";
+
+    }else{
+
+      result.style.background = "white";
+      result.style.color = "black";
+
+    }
+
+  }
 
 }
 
